@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
-pragma solidity ^8.0.10;
+pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 
@@ -16,12 +16,14 @@ contract collection is ERC721Upgradeable {
         string memory name_,
         string memory symbol_,
         string memory assetUrl,
-        string memory creatorName,
         uint256 maxQuantity_,
         uint16 edition_,
-        uint16 cost_,
-        uint16 royalty
-    ) public initializer {
+        uint16 cost_
+    )
+        public
+        // uint16 royalty
+        initializer
+    {
         __ERC721_init(name_, symbol_);
         tokenID = 0;
         url = assetUrl;
@@ -30,16 +32,14 @@ contract collection is ERC721Upgradeable {
         cost = cost_;
     }
 
-    function mint(address to, uint256 tokenId) public payable {
+    function mint(address to) public payable {
         require(tokenID < maxQuantity, "Max quantity reached");
-        require(msg.value < cost, "Not Enough gas.");
+        require(msg.value == cost, "Not Enough gas.");
         tokenID += 1;
         _mint(to, tokenID);
     }
 
-    function tokenURI(
-        uint256 tokenId
-    ) public view override returns (string memory) {
+    function tokenURI() public view returns (string memory) {
         return url;
     }
 
